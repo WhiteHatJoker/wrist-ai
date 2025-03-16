@@ -7,17 +7,25 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.wear.compose.material3.IconButton
+import androidx.wear.compose.material3.MaterialTheme
+import androidx.wear.compose.material3.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
+import com.example.wristai.R
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.material.Chip
@@ -32,6 +40,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.util.Locale
 
+// --- Data Models ---
 data class ChatGPTRequest(val model: String, val messages: List<Map<String, String>>)
 data class ChatGPTResponse(
     val choices: List<Choice>
@@ -50,7 +59,7 @@ data class Message(
     val refusal: Any?
 )
 
-
+// --- Retrofit API Interface ---
 interface OpenAIService {
     @Headers("Authorization: Bearer REMOVED_OPENAI_API_KEY", "Content-Type: application/json")
     @POST("v1/chat/completions")
@@ -65,12 +74,14 @@ fun createOpenAIService(): OpenAIService {
         .create(OpenAIService::class.java)
 }
 
+// --- Main Composable ---
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
 fun VoiceInputScreen(context: Context) {
     var voiceText by remember { mutableStateOf("Tap to speak") }
     var chatGPTResponse by remember { mutableStateOf("") }
     var detectedLanguage by remember { mutableStateOf(Locale.US) }
+    var showTextField by remember { mutableStateOf(false) } // Controls UI switching
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val apiService = remember { createOpenAIService() }
@@ -95,12 +106,14 @@ fun VoiceInputScreen(context: Context) {
                 val languageCode = data.getStringExtra(RecognizerIntent.EXTRA_LANGUAGE) // Get detected language
                 val userInput = results?.get(0) ?: "None"
                 voiceText = userInput
-
-                // Detect the spoken language
                 detectedLanguage = Locale.forLanguageTag(languageCode ?: "en")
+
                 Log.d("LANGUAGE_DETECTION", "Detected Language: ${detectedLanguage.language}")
 
-                // Call ChatGPT API with the detected language
+                // Switch UI to show response
+                showTextField = true
+
+                // API call
                 coroutineScope.launch(Dispatchers.IO) {
                     try {
                         val request = ChatGPTRequest(
@@ -143,21 +156,42 @@ fun VoiceInputScreen(context: Context) {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en,ru") // Enable multi-language
             }
 
-            Chip(
-                onClick = { voiceLauncher.launch(voiceIntent) },
-                label = "Voice Input",
-                secondaryLabel = voiceText
-            )
+            if (!showTextField) {
+                // Voice Input Chip (Only shown before user speaks)
+                Chip(
+                    onClick = { voiceLauncher.launch(voiceIntent) },
+                    label = "Tap to Speak",
+                    secondaryLabel = "Listening..."
+                )
+            } else {
+                // Scrollable Response Text Field
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(8.dp)
+                ) {
+                    Text(
+                        text = chatGPTResponse,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .verticalScroll(scrollState)
+                    )
 
-            Chip(
-                onClick = {},
-                label = "ChatGPT Response",
-                secondaryLabel = chatGPTResponse
-            )
+                }
+
+                Chip(
+                    onClick = { voiceLauncher.launch(voiceIntent) },
+                    label = "🎤 Speak Again",
+                    modifier = Modifier.padding(8.dp)
+                )
+
+            }
         }
     }
 
-    // Cleanup Text-to-Speech
+    // Cleanup TTS
     DisposableEffect(Unit) {
         onDispose {
             textToSpeech?.stop()
@@ -166,9 +200,10 @@ fun VoiceInputScreen(context: Context) {
     }
 }
 
+// --- Preview for Wear Emulator ---
 @WearPreviewDevices
 @WearPreviewFontScales
 @Composable
 fun VoiceInputScreenPreview() {
-    VoiceInputScreen(context = androidx.compose.ui.platform.LocalContext.current)
+    VoiceInputScreen(context = LocalContext.current)
 }
