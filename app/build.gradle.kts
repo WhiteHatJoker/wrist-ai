@@ -56,6 +56,10 @@ dependencies {
     implementation(libs.core.splashscreen)
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling)
+    implementation("com.google.code.gson:gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
