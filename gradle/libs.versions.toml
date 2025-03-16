@@ -1,5 +1,7 @@
 [versions]
 agp = "8.8.0"
+horologistComposeLayout = "0.6.8"
+horologistComposeMaterial = "0.6.8"
 kotlin = "2.0.0"
 playServicesWearable = "18.0.0"
 composeBom = "2024.04.01"
@@ -8,8 +10,15 @@ composeFoundation = "1.2.1"
 wearToolingPreview = "1.0.0"
 activityCompose = "1.10.0"
 coreSplashscreen = "1.0.1"
+composeMaterial3 = "1.0.0-alpha33"
+wearComposeFoundation = "1.2.1"
+wearComposeMaterial = "1.2.1"
+composeUiTooling = "1.4.1"
+
 
 [libraries]
+horologist-compose-layout = { module = "com.google.android.horologist:horologist-compose-layout", version.ref = "horologistComposeLayout" }
+horologist-compose-material = { module = "com.google.android.horologist:horologist-compose-material", version.ref = "horologistComposeMaterial" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
@@ -23,6 +32,10 @@ compose-foundation = { group = "androidx.wear.compose", name = "compose-foundati
 wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "composeMaterial3" }
+wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "wearComposeFoundation" }
+wear-compose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearComposeMaterial" }
+compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "composeUiTooling" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
