@@ -1,7 +1,5 @@
 package com.example.wristai.presentation.voiceinput
 
-
-
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
@@ -17,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
@@ -25,20 +24,13 @@ import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.util.Locale
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.withContext
-
 
 data class ChatGPTRequest(val model: String, val messages: List<Map<String, String>>)
 data class ChatGPTResponse(
@@ -54,7 +46,7 @@ data class Choice(
 
 data class Message(
     val role: String,
-    val content: String, // Now correctly mapped as a string instead of an array
+    val content: String,
     val refusal: Any?
 )
 
@@ -78,6 +70,7 @@ fun createOpenAIService(): OpenAIService {
 fun VoiceInputScreen(context: Context) {
     var voiceText by remember { mutableStateOf("Tap to speak") }
     var chatGPTResponse by remember { mutableStateOf("") }
+    var detectedLanguage by remember { mutableStateOf(Locale.US) }
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val apiService = remember { createOpenAIService() }
@@ -89,8 +82,8 @@ fun VoiceInputScreen(context: Context) {
 
     LaunchedEffect(context) {
         textToSpeech = TextToSpeech(context) { status ->
-            if (status != TextToSpeech.ERROR) {
-                textToSpeech?.language = Locale.US
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech?.language = Locale.US // Default to English
             }
         }
     }
@@ -99,10 +92,15 @@ fun VoiceInputScreen(context: Context) {
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             result.data?.let { data ->
                 val results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                val languageCode = data.getStringExtra(RecognizerIntent.EXTRA_LANGUAGE) // Get detected language
                 val userInput = results?.get(0) ?: "None"
                 voiceText = userInput
 
-                // Call ChatGPT API
+                // Detect the spoken language
+                detectedLanguage = Locale.forLanguageTag(languageCode ?: "en")
+                Log.d("LANGUAGE_DETECTION", "Detected Language: ${detectedLanguage.language}")
+
+                // Call ChatGPT API with the detected language
                 coroutineScope.launch(Dispatchers.IO) {
                     try {
                         val request = ChatGPTRequest(
@@ -111,11 +109,13 @@ fun VoiceInputScreen(context: Context) {
                         )
 
                         val response = apiService.getChatGPTResponse(request)
-
                         val gptReply = response.choices.firstOrNull()?.message?.content ?: "No response"
 
                         withContext(Dispatchers.Main) {
                             chatGPTResponse = gptReply
+
+                            // Set TTS to match the detected language
+                            textToSpeech?.language = detectedLanguage
                             textToSpeech?.speak(gptReply, TextToSpeech.QUEUE_FLUSH, null, null)
                         }
                     } catch (e: Exception) {
@@ -125,7 +125,6 @@ fun VoiceInputScreen(context: Context) {
                         Log.e("API_ERROR", "ChatGPT API call failed", e)
                     }
                 }
-
             }
         }
 
@@ -141,6 +140,7 @@ fun VoiceInputScreen(context: Context) {
             val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
                 putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
                 putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak your message")
+                putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en,ru") // Enable multi-language
             }
 
             Chip(
