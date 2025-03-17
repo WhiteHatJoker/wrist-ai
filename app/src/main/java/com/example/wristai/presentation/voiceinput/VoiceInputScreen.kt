@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.wear.compose.material3.Text
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
 import androidx.wear.compose.ui.tooling.preview.WearPreviewFontScales
+import com.example.wristai.BuildConfig
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.material.Chip
@@ -55,7 +56,7 @@ data class Message(
 
 // --- Retrofit API Interface ---
 interface OpenAIService {
-    @Headers("Authorization: Bearer REMOVED_OPENAI_API_KEY", "Content-Type: application/json")
+    @Headers("Authorization: Bearer ${BuildConfig.OPENAI_API_KEY}", "Content-Type: application/json")
     @POST("v1/chat/completions")
     suspend fun getChatGPTResponse(@Body request: ChatGPTRequest): ChatGPTResponse
 }

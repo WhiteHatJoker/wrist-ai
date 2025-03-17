@@ -14,6 +14,7 @@ composeMaterial3 = "1.0.0-alpha33"
 wearComposeFoundation = "1.2.1"
 wearComposeMaterial = "1.2.1"
 composeUiTooling = "1.4.1"
+accessibilityTestFramework = "4.1.1"
 
 
 [libraries]
@@ -36,9 +37,11 @@ compose-material3 = { group = "androidx.wear.compose", name = "compose-material3
 wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "wearComposeFoundation" }
 wear-compose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearComposeMaterial" }
 compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "composeUiTooling" }
+accessibility-test-framework = { group = "com.google.android.apps.common.testing.accessibility.framework", name = "accessibility-test-framework", version.ref = "accessibilityTestFramework" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version = "2.0.1" }
 
