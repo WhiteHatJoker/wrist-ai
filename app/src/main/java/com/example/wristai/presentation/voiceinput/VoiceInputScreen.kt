@@ -82,6 +82,7 @@ fun VoiceInputScreen(context: Context) {
     var voiceText by remember { mutableStateOf("Tap to speak") }
     var chatGPTResponse by remember { mutableStateOf("") }
     var detectedLanguage by remember { mutableStateOf(Locale.US) }
+    var conversationHistory by remember { mutableStateOf(listOf<Pair<String, String>>()) } // Stores past messages
     var showTextField by remember { mutableStateOf(false) } // Controls UI switching
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
@@ -126,8 +127,10 @@ fun VoiceInputScreen(context: Context) {
                         val gptReply = response.choices.firstOrNull()?.message?.content ?: "No response"
 
                         withContext(Dispatchers.Main) {
-                            chatGPTResponse = gptReply
+                            // Save conversation history
+                            conversationHistory = conversationHistory + (voiceText to gptReply)
 
+                            chatGPTResponse = gptReply
                             // Set TTS to match the detected language
                             textToSpeech?.language = detectedLanguage
                             textToSpeech?.speak(gptReply, TextToSpeech.QUEUE_FLUSH, null, null)
@@ -165,28 +168,29 @@ fun VoiceInputScreen(context: Context) {
                 )
             } else {
                 // Scrollable Response Text Field
+                // Display conversation history
                 Column(
                     modifier = Modifier
+                        .weight(1f) // Takes up all available space
                         .fillMaxWidth()
-                        .weight(1f)
+                        .verticalScroll(scrollState)
                         .padding(8.dp)
                 ) {
-                    Text(
-                        text = chatGPTResponse,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .verticalScroll(scrollState)
-                    )
+                    conversationHistory.forEach { (question, response) ->
+                        Text("👤 $question", color = Color.Gray)
+                        Text("🤖 $response", modifier = Modifier.padding(bottom = 8.dp))
+                    }
 
+                    CompactChip(
+                        onClick = { voiceLauncher.launch(voiceIntent) },
+                        label = { Text("🎤 Speak") }, // Smaller text
+                        modifier =  Modifier
+                            .align(Alignment.CenterHorizontally)
+                    )
                 }
 
 
-                CompactChip(
-                    onClick = { voiceLauncher.launch(voiceIntent) },
-                    label = { Text("🎤 Speak") }, // Smaller text
-                    modifier =  Modifier
-                        .align(Alignment.CenterHorizontally)
-                )
+
 
 
             }
