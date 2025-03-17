@@ -12,8 +12,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.wear.compose.material.CompactChip
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -160,8 +161,7 @@ fun VoiceInputScreen(context: Context) {
                 // Voice Input Chip (Only shown before user speaks)
                 Chip(
                     onClick = { voiceLauncher.launch(voiceIntent) },
-                    label = "Tap to Speak",
-                    secondaryLabel = "Listening..."
+                    label = "Tap to Speak"
                 )
             } else {
                 // Scrollable Response Text Field
@@ -175,17 +175,19 @@ fun VoiceInputScreen(context: Context) {
                         text = chatGPTResponse,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
                             .verticalScroll(scrollState)
                     )
 
                 }
 
-                Chip(
+
+                CompactChip(
                     onClick = { voiceLauncher.launch(voiceIntent) },
-                    label = "🎤 Speak Again",
-                    modifier = Modifier.padding(8.dp)
+                    label = { Text("🎤 Speak") }, // Smaller text
+                    modifier =  Modifier
+                        .align(Alignment.CenterHorizontally)
                 )
+
 
             }
         }
