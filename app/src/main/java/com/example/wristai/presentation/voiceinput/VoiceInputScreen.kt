@@ -3,7 +3,6 @@ package com.example.wristai.presentation.voiceinput
 import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
-import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -82,18 +81,7 @@ fun VoiceInputScreen(context: Context) {
     val coroutineScope = rememberCoroutineScope()
     val apiService = remember { createOpenAIService() }
 
-    // Initialize Text-to-Speech
-    var textToSpeech: TextToSpeech? by remember {
-        mutableStateOf(null)
-    }
 
-    LaunchedEffect(context) {
-        textToSpeech = TextToSpeech(context) { status ->
-            if (status == TextToSpeech.SUCCESS) {
-                textToSpeech?.language = Locale.US // Default to English
-            }
-        }
-    }
 
     val voiceLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -125,9 +113,6 @@ fun VoiceInputScreen(context: Context) {
                             conversationHistory = conversationHistory + (voiceText to gptReply)
 
                             chatGPTResponse = gptReply
-                            // Set TTS to match the detected language
-                            textToSpeech?.language = detectedLanguage
-                            textToSpeech?.speak(gptReply, TextToSpeech.QUEUE_FLUSH, null, null)
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
@@ -191,13 +176,6 @@ fun VoiceInputScreen(context: Context) {
         }
     }
 
-    // Cleanup TTS
-    DisposableEffect(Unit) {
-        onDispose {
-            textToSpeech?.stop()
-            textToSpeech?.shutdown()
-        }
-    }
 }
 
 // --- Preview for Wear Emulator ---
