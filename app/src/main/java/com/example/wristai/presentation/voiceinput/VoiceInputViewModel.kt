@@ -24,7 +24,13 @@ class VoiceInputViewModel @Inject constructor(
     var errorMessage by mutableStateOf<String?>(null)
         private set
 
+    var isLoading by mutableStateOf(false)
+        private set
+
     fun onUserInput(userText: String) {
+        errorMessage = null
+        isLoading = true
+
         Log.d("VoiceInputVM", "🗣️ onUserInput(“$userText”) called")
         viewModelScope.launch {
             try {
@@ -37,6 +43,8 @@ class VoiceInputViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e("VoiceInputVM", "❌ Error:", e)
                 errorMessage = e.localizedMessage
+            } finally {
+                isLoading = false
             }
         }
     }

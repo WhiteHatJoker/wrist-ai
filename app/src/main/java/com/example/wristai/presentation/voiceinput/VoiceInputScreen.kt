@@ -15,6 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material3.Text
@@ -30,6 +31,7 @@ fun VoiceInputScreen(
 ) {
     val conversation = viewModel.conversation
     val error = viewModel.errorMessage
+    val isLoading    = viewModel.isLoading
     val listState = rememberScalingLazyListState()
     val context = LocalContext.current
 
@@ -68,10 +70,13 @@ fun VoiceInputScreen(
                     .rotaryWithScroll(listState),
                 contentAlignment = Alignment.Center
             ) {
-                Chip(
-                    onClick = { voiceLauncher.launch(voiceIntent) },
-                    label = "Tap to Speak"
-                )
+
+                if (isLoading) {
+                    CircularProgressIndicator()
+                } else {
+                    Chip(onClick = { voiceLauncher.launch(voiceIntent) }, label = "Tap to Speak")
+                }
+
             }
         } else {
             ScalingLazyColumn(
@@ -95,10 +100,14 @@ fun VoiceInputScreen(
 
                 item {
                     Spacer(Modifier.height(16.dp))
-                    CompactChip(
-                        onClick = { voiceLauncher.launch(voiceIntent) },
-                        label = { Text("🎤 Speak") }
-                    )
+                    if (isLoading) {
+                        CircularProgressIndicator()
+                    } else {
+                        CompactChip(
+                            onClick = { voiceLauncher.launch(voiceIntent) },
+                            label = { Text("🎤 Speak") }
+                        )
+                    }
                 }
 
                 if (error != null) {
