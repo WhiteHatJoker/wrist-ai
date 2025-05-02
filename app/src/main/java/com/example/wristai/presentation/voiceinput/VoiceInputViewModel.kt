@@ -1,5 +1,6 @@
 package com.example.wristai.presentation.voiceinput
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,13 +25,17 @@ class VoiceInputViewModel @Inject constructor(
         private set
 
     fun onUserInput(userText: String) {
+        Log.d("VoiceInputVM", "🗣️ onUserInput(“$userText”) called")
         viewModelScope.launch {
             try {
+                Log.d("VoiceInputVM", "➡️ Sending prompt…")
                 val aiReply = withContext(Dispatchers.IO) {
                     aiRepo.sendPrompt(userText)
                 }
+                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
                 conversation = conversation + (userText to aiReply)
             } catch (e: Exception) {
+                Log.e("VoiceInputVM", "❌ Error:", e)
                 errorMessage = e.localizedMessage
             }
         }
