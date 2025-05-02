@@ -53,25 +53,32 @@ fun VoiceInputScreen(
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en,ru")
     }
 
+
+
     ScreenScaffold {
-        ScalingLazyColumn(
-            state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .rotaryWithScroll(listState)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (conversation.isEmpty()) {
-                item {
-                    Chip(
-                        onClick = { voiceLauncher.launch(voiceIntent) },
-                        label = "Tap to Speak"
-                    )
-                }
-            } else {
+        if (conversation.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .rotaryWithScroll(listState),
+                contentAlignment = Alignment.Center
+            ) {
+                Chip(
+                    onClick = { voiceLauncher.launch(voiceIntent) },
+                    label = "Tap to Speak"
+                )
+            }
+        } else {
+            ScalingLazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .rotaryWithScroll(listState)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 items(conversation) { (q, a) ->
                     Column(
                         modifier = Modifier
@@ -91,10 +98,11 @@ fun VoiceInputScreen(
                         label = { Text("🎤 Speak") }
                     )
                 }
-            }
-            if (error != null) {
-                item {
-                    Text("Error: $error", color = MaterialTheme.colors.error)
+
+                if (error != null) {
+                    item {
+                        Text("Error: $error", color = MaterialTheme.colors.error)
+                    }
                 }
             }
         }
