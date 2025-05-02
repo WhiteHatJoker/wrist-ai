@@ -53,7 +53,12 @@ fun VoiceInputScreen(
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en,ru")
     }
 
-
+    // Scroll to latest question upon response
+    LaunchedEffect(conversation.size) {
+        if (conversation.isNotEmpty()) {
+            listState.scrollToItem(conversation.lastIndex * 2, scrollOffset = 0)
+        }
+    }
 
     ScreenScaffold {
         if (conversation.isEmpty()) {
@@ -79,14 +84,11 @@ fun VoiceInputScreen(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(conversation) { (q, a) ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
+                conversation.forEachIndexed { idx, (q, a) ->
+                    item {
                         Text("👤 $q")
+                    }
+                    item {
                         Text("🤖 $a")
                     }
                 }
