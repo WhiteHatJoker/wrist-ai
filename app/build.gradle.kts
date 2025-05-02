@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.secrets.gradle)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
+
 }
 
 android {
@@ -41,6 +45,10 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.hilt.android)         // maps to com.google.dagger:hilt-android:2.56.1
+    ksp(          libs.hilt.compiler)
+    implementation(libs.hilt.nav.compose)
 
     implementation(libs.play.services.wearable)
     implementation(platform(libs.compose.bom))
