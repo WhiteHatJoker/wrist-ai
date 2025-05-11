@@ -5,15 +5,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-interface OpenAiRepository {
-    suspend fun sendPrompt(prompt: String): String
-}
 
-class OpenAiRepositoryImpl(apiKey: String) : OpenAiRepository {
+class ChatGptRepositoryImpl(apiKey: String) : LlmRepository {
     private val service: OpenAIService
 
     init {
-
         // Extend timeouts
         val client = OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -23,7 +19,6 @@ class OpenAiRepositoryImpl(apiKey: String) : OpenAiRepository {
             .retryOnConnectionFailure(true)
             .build()
 
-
         service = Retrofit.Builder()
             .baseUrl("https://api.openai.com/")
             .client(client)
@@ -32,11 +27,9 @@ class OpenAiRepositoryImpl(apiKey: String) : OpenAiRepository {
             .create(OpenAIService::class.java)
     }
 
-
-
-    override suspend fun sendPrompt(prompt: String): String {
+    override suspend fun sendPrompt(prompt: String, model: String): String {
         val req = ChatGPTRequest(
-            model = "gpt-4o",
+            model = model,
             messages = listOf(mapOf("role" to "user", "content" to prompt))
         )
         val resp = service.getChatGPTResponse(req)
