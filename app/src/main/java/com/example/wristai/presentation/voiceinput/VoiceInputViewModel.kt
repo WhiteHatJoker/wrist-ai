@@ -45,18 +45,18 @@ class VoiceInputViewModel @Inject constructor(
         errorMessage = null
         isLoading = true
 
-        Log.d("VoiceInputVM", "🗣️ onUserInput(\"$userText\") called")
+//        Log.d("VoiceInputVM", "🗣️ onUserInput(\"$userText\") called")
         viewModelScope.launch {
             try {
-                Log.d("VoiceInputVM", "➡️ Sending prompt to ${selectedModel.modelId}…")
+//                Log.d("VoiceInputVM", "➡️ Sending prompt to ${selectedModel.modelId}…")
                 aiRepo.currentModel = selectedModel // <-- update model/provider
                 val aiReply = withContext(Dispatchers.IO) {
                     aiRepo.sendPrompt(userText, selectedModel.modelId)
                 }
-                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
+//                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
                 conversation = conversation + (userText to aiReply)
             } catch (e: Exception) {
-                Log.e("VoiceInputVM", "❌ Error:", e)
+//                Log.e("VoiceInputVM", "❌ Error:", e)
                 errorMessage = e.localizedMessage
             } finally {
                 isLoading = false
