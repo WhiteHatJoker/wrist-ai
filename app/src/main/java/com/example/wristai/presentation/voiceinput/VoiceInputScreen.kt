@@ -5,8 +5,10 @@ import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,33 +35,52 @@ fun ModelSelectorDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Model: ${selectedModel.displayName}",
-            style = MaterialTheme.typography.caption1,
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        Box(
             modifier = Modifier
-                .padding(8.dp)
                 .clickable { expanded = !expanded }
-        )
+                .background(
+                    color = MaterialTheme.colors.primary.copy(alpha = 0.1f),
+                    shape = RoundedCornerShape(16.dp)
+                )
+                .padding(horizontal = 12.dp, vertical = 6.dp)
+        ) {
+            Text(
+                text = "${selectedModel.displayName} ▼",
+                style = MaterialTheme.typography.caption1
+            )
+        }
 
         if (expanded) {
-            modelOptions.forEach { model ->
-                Text(
-                    text = model.displayName,
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .clickable {
-                            onModelSelected(model)
-                            expanded = false
-                        }
-                )
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Column(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colors.surface.copy(alpha = 0.9f),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .padding(8.dp)
+            ) {
+                modelOptions.forEach { model ->
+                    Text(
+                        text = model.displayName,
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(4.dp)
+                            .clickable {
+                                onModelSelected(model)
+                                expanded = false
+                            }
+                    )
+                }
             }
         }
     }
 }
+
 
 
 
