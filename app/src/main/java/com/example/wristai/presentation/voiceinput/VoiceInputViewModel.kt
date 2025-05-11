@@ -11,11 +11,13 @@ import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.wristai.openai.OpenAiRepository
+import com.example.wristai.openai.LlmModel
+import com.example.wristai.openai.LlmProvider
+import com.example.wristai.openai.MultiLlmRepository
 
 @HiltViewModel
 class VoiceInputViewModel @Inject constructor(
-    private val aiRepo: OpenAiRepository
+    private val aiRepo: MultiLlmRepository
 ) : ViewModel() {
 
     var conversation by mutableStateOf<List<Pair<String, String>>>(emptyList())
@@ -27,16 +29,29 @@ class VoiceInputViewModel @Inject constructor(
     var isLoading by mutableStateOf(false)
         private set
 
+    val modelOptions = listOf(
+        LlmModel("ChatGPT 4o", "gpt-4o", LlmProvider.CHAT_GPT),
+        LlmModel("ChatGPT 4.1", "gpt-4.1", LlmProvider.CHAT_GPT),
+        LlmModel("ChatGPT o4-mini", "o4-mini", LlmProvider.CHAT_GPT),
+        LlmModel("Gemini 2.5 Pro", "gemini-2.5-pro-preview-05-06", LlmProvider.GEMINI),
+        LlmModel("Gemini 2.5 Flash", "gemini-2.5-flash-preview-04-17", LlmProvider.GEMINI),
+        LlmModel("Gemini 2.0 Flash", "gemini-2.0-flash", LlmProvider.GEMINI),
+    )
+
+    var selectedModel by mutableStateOf(modelOptions[0])
+
+
     fun onUserInput(userText: String) {
         errorMessage = null
         isLoading = true
 
-        Log.d("VoiceInputVM", "🗣️ onUserInput(“$userText”) called")
+        Log.d("VoiceInputVM", "🗣️ onUserInput(\"$userText\") called")
         viewModelScope.launch {
             try {
-                Log.d("VoiceInputVM", "➡️ Sending prompt…")
+                Log.d("VoiceInputVM", "➡️ Sending prompt to ${selectedModel.modelId}…")
+                aiRepo.currentModel = selectedModel // <-- update model/provider
                 val aiReply = withContext(Dispatchers.IO) {
-                    aiRepo.sendPrompt(userText)
+                    aiRepo.sendPrompt(userText, selectedModel.modelId)
                 }
                 Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
                 conversation = conversation + (userText to aiReply)
@@ -48,4 +63,5 @@ class VoiceInputViewModel @Inject constructor(
             }
         }
     }
+
 }

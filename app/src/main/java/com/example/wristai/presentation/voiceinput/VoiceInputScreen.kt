@@ -5,6 +5,7 @@ import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,10 +20,49 @@ import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.CompactChip
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material3.Text
+import com.example.wristai.openai.LlmModel
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.compose.layout.ScreenScaffold
 import com.google.android.horologist.compose.material.Chip
 import com.google.android.horologist.compose.rotaryinput.rotaryWithScroll
+
+@Composable
+fun ModelSelectorDropdown(
+    selectedModel: LlmModel,
+    modelOptions: List<LlmModel>,
+    onModelSelected: (LlmModel) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Model: ${selectedModel.displayName}",
+            style = MaterialTheme.typography.caption1,
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable { expanded = !expanded }
+        )
+
+        if (expanded) {
+            modelOptions.forEach { model ->
+                Text(
+                    text = model.displayName,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .clickable {
+                            onModelSelected(model)
+                            expanded = false
+                        }
+                )
+            }
+        }
+    }
+}
+
+
 
 @OptIn(ExperimentalHorologistApi::class)
 @Composable
@@ -109,6 +149,16 @@ fun VoiceInputScreen(
                         )
                     }
                 }
+
+
+                item {
+                    ModelSelectorDropdown(
+                        selectedModel = viewModel.selectedModel,
+                        modelOptions = viewModel.modelOptions,
+                        onModelSelected = { viewModel.selectedModel = it }
+                    )
+                }
+
 
                 if (error != null) {
                     item {
