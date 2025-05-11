@@ -11,9 +11,9 @@ import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.wristai.openai.LlmModel
-import com.example.wristai.openai.LlmProvider
-import com.example.wristai.openai.MultiLlmRepository
+import com.example.wristai.openai.remote.LlmModel
+import com.example.wristai.openai.remote.LlmProvider
+import com.example.wristai.openai.remote.MultiLlmRepository
 
 @HiltViewModel
 class VoiceInputViewModel @Inject constructor(

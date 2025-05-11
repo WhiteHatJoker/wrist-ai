@@ -1,11 +1,13 @@
-package com.example.wristai.openai
+package com.example.wristai.openai.service
 
 import com.example.wristai.BuildConfig
+import com.example.wristai.openai.model.ChatGPTRequest
+import com.example.wristai.openai.model.ChatGPTResponse
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface OpenAIService {
+interface ChatGptService {
     @Headers(
         "Authorization: Bearer ${BuildConfig.OPENAI_API_KEY}",
         "Content-Type: application/json"

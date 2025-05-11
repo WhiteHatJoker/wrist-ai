@@ -1,4 +1,4 @@
-package com.example.wristai.openai
+package com.example.wristai.openai.model
 
 data class GeminiRequest(
     val contents: List<Content>

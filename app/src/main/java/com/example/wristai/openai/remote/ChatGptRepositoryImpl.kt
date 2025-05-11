@@ -1,5 +1,8 @@
-package com.example.wristai.openai
+package com.example.wristai.openai.remote
 
+import com.example.wristai.openai.LlmRepository
+import com.example.wristai.openai.service.ChatGptService
+import com.example.wristai.openai.model.ChatGPTRequest
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -7,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 
 class ChatGptRepositoryImpl(apiKey: String) : LlmRepository {
-    private val service: OpenAIService
+    private val service: ChatGptService
 
     init {
         // Extend timeouts
@@ -24,7 +27,7 @@ class ChatGptRepositoryImpl(apiKey: String) : LlmRepository {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(OpenAIService::class.java)
+            .create(ChatGptService::class.java)
     }
 
     override suspend fun sendPrompt(prompt: String, model: String): String {

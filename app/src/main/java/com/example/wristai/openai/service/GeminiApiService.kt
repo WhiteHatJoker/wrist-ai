@@ -1,5 +1,7 @@
-package com.example.wristai.openai
+package com.example.wristai.openai.service
 
+import com.example.wristai.openai.model.GeminiRequest
+import com.example.wristai.openai.model.GeminiResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path
