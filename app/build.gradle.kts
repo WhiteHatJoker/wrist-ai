@@ -20,6 +20,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         buildConfigField("String", "OPENAI_API_KEY", "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"${project.findProperty("GEMINI_API_KEY") ?: ""}\"")
     }
 
     buildTypes {
@@ -46,10 +47,12 @@ android {
 
 dependencies {
 
-    implementation(libs.hilt.android)         // maps to com.google.dagger:hilt-android:2.56.1
-    ksp(          libs.hilt.compiler)
+    // ========== Hilt & DI ==========
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.nav.compose)
 
+    // ========== Wear OS & UI ==========
     implementation(libs.play.services.wearable)
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
@@ -66,11 +69,22 @@ dependencies {
     implementation(libs.core.splashscreen)
     implementation(libs.compose.material3)
     implementation(libs.compose.ui.tooling)
+
+    // ========== Network ==========
     implementation("com.google.code.gson:gson:2.9.0")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // ========== Accessibility (Optional) ==========
     implementation(libs.accessibility.test.framework)
 
+    // ========== Unit Testing (Local/JVM) ==========
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("io.mockk:mockk:1.13.5")
+    testImplementation("app.cash.turbine:turbine:1.0.0") // for flow/async testing (optional)
+
+    // ========== UI / Instrumented Tests ==========
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
