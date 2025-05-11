@@ -1,6 +1,8 @@
 [versions]
-agp = "8.8.0"
-kotlin = "2.0.0"
+agp = "8.9.2"
+horologistComposeLayout = "0.6.8"
+horologistComposeMaterial = "0.6.8"
+kotlin = "2.0.21"
 playServicesWearable = "18.0.0"
 composeBom = "2024.04.01"
 composeMaterial = "1.2.1"
@@ -8,8 +10,20 @@ composeFoundation = "1.2.1"
 wearToolingPreview = "1.0.0"
 activityCompose = "1.10.0"
 coreSplashscreen = "1.0.1"
+composeMaterial3 = "1.0.0-alpha33"
+wearComposeFoundation = "1.2.1"
+wearComposeMaterial = "1.2.1"
+composeUiTooling = "1.4.1"
+accessibilityTestFramework = "4.1.1"
+hilt          = "2.56.1"
+ksp           = "2.0.21-1.0.28"
+hilt-nav-compose = "1.0.0"
+
+
 
 [libraries]
+horologist-compose-layout = { module = "com.google.android.horologist:horologist-compose-layout", version.ref = "horologistComposeLayout" }
+horologist-compose-material = { module = "com.google.android.horologist:horologist-compose-material", version.ref = "horologistComposeMaterial" }
 play-services-wearable = { group = "com.google.android.gms", name = "play-services-wearable", version.ref = "playServicesWearable" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 ui = { group = "androidx.compose.ui", name = "ui" }
@@ -23,9 +37,19 @@ compose-foundation = { group = "androidx.wear.compose", name = "compose-foundati
 wear-tooling-preview = { group = "androidx.wear", name = "wear-tooling-preview", version.ref = "wearToolingPreview" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+compose-material3 = { group = "androidx.wear.compose", name = "compose-material3", version.ref = "composeMaterial3" }
+wear-compose-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "wearComposeFoundation" }
+wear-compose-material = { module = "androidx.wear.compose:compose-material", version.ref = "wearComposeMaterial" }
+compose-ui-tooling = { group = "androidx.wear.compose", name = "compose-ui-tooling", version.ref = "composeUiTooling" }
+accessibility-test-framework = { group = "com.google.android.apps.common.testing.accessibility.framework", name = "accessibility-test-framework", version.ref = "accessibilityTestFramework" }
+hilt-android  = { group = "com.google.dagger", name = "hilt-android",  version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-nav-compose     = { group = "androidx.hilt",           name = "hilt-navigation-compose", version.ref = "hilt-nav-compose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version = "2.0.1" }
+ksp               = { id = "com.google.devtools.ksp",                     version.ref = "ksp" }
+hilt-android      = { id = "com.google.dagger.hilt.android",             version.ref = "hilt" }
