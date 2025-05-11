@@ -1,19 +1,38 @@
 package com.example.wristai.di
 
 import com.example.wristai.BuildConfig
-import com.example.wristai.openai.OpenAiRepository
-import com.example.wristai.openai.OpenAiRepositoryImpl
+import com.example.wristai.openai.ChatGptRepositoryImpl
+import com.example.wristai.openai.GeminiRepositoryImpl
+import com.example.wristai.openai.LlmRepository
+import com.example.wristai.openai.MultiLlmRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
     @Provides
     @Singleton
-    fun provideOpenAiRepository(): OpenAiRepository =
-        OpenAiRepositoryImpl(BuildConfig.OPENAI_API_KEY)
+    @Named("chatGpt")
+    fun provideChatGptRepo(): LlmRepository =
+        ChatGptRepositoryImpl(BuildConfig.OPENAI_API_KEY)
+
+    @Provides
+    @Singleton
+    @Named("gemini")
+    fun provideGeminiRepo(): LlmRepository =
+        GeminiRepositoryImpl(BuildConfig.GEMINI_API_KEY)
+
+    @Provides
+    @Singleton
+    fun provideMultiRepo(
+        @Named("chatGpt") chatGpt: LlmRepository,
+        @Named("gemini") gemini: LlmRepository
+    ): MultiLlmRepository =
+        MultiLlmRepository(chatGpt, gemini)
 }
