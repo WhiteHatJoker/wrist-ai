@@ -3,7 +3,7 @@ package com.example.wristai.di
 import com.example.wristai.BuildConfig
 import com.example.wristai.openai.remote.ChatGptRepositoryImpl
 import com.example.wristai.openai.remote.GeminiRepositoryImpl
-import com.example.wristai.openai.LlmRepository
+import com.example.wristai.openai.remote.LlmRepository
 import com.example.wristai.openai.remote.MultiLlmRepository
 import dagger.Module
 import dagger.Provides

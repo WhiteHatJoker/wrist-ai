@@ -1,7 +1,5 @@
 package com.example.wristai.openai.remote
 
-import com.example.wristai.openai.LlmRepository
-
 enum class LlmProvider { CHAT_GPT, GEMINI }
 
 data class LlmModel(

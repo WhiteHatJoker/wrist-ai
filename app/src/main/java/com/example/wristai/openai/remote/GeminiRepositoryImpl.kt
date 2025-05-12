@@ -1,7 +1,6 @@
 package com.example.wristai.openai.remote
 
 import com.example.wristai.openai.service.GeminiApiService
-import com.example.wristai.openai.LlmRepository
 import com.example.wristai.openai.model.Content
 import com.example.wristai.openai.model.GeminiRequest
 import com.example.wristai.openai.model.Part

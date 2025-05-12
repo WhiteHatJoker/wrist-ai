@@ -1,6 +1,5 @@
 package com.example.wristai.openai.remote
 
-import com.example.wristai.openai.LlmRepository
 import com.example.wristai.openai.service.ChatGptService
 import com.example.wristai.openai.model.ChatGPTRequest
 import okhttp3.OkHttpClient
