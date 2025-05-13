@@ -4,9 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,9 +48,7 @@ class VoiceInputViewModel @Inject constructor(
             try {
 //                Log.d("VoiceInputVM", "➡️ Sending prompt to ${selectedModel.modelId}…")
                 aiRepo.currentModel = selectedModel // <-- update model/provider
-                val aiReply = withContext(Dispatchers.IO) {
-                    aiRepo.sendPrompt(userText, selectedModel.modelId)
-                }
+                val aiReply = aiRepo.sendPrompt(userText, selectedModel.modelId)
 //                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
                 conversation = conversation + (userText to aiReply)
             } catch (e: Exception) {
