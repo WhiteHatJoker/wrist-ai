@@ -9,8 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class GeminiRepositoryImpl(private val apiKey: String) : LlmRepository {
-    private val service: GeminiApiService
+class GeminiRepositoryImpl(private val apiKey: String, private val service: GeminiApiService? = null) : LlmRepository {
+    private val actualService: GeminiApiService
 
     init {
         val client = OkHttpClient.Builder()
@@ -21,7 +21,7 @@ class GeminiRepositoryImpl(private val apiKey: String) : LlmRepository {
             .retryOnConnectionFailure(true)
             .build()
 
-        service = Retrofit.Builder()
+        actualService = service ?: Retrofit.Builder()
             .baseUrl("https://generativelanguage.googleapis.com/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
@@ -38,7 +38,7 @@ class GeminiRepositoryImpl(private val apiKey: String) : LlmRepository {
             )
         )
 
-        val response = service.generateContent(model, apiKey, request)
+        val response = actualService.generateContent(model, apiKey, request)
         return response.candidates
             ?.firstOrNull()
             ?.content
