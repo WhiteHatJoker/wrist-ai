@@ -49,7 +49,7 @@ class VoiceInputViewModel @Inject constructor(
 //                Log.d("VoiceInputVM", "➡️ Sending prompt to ${selectedModel.modelId}…")
                 aiRepo.currentModel = selectedModel // <-- update model/provider
                 val aiReply = aiRepo.sendPrompt(userText, selectedModel.modelId)
-                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
+//                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
                 conversation = conversation + (userText to aiReply)
             } catch (e: Exception) {
 //                Log.e("VoiceInputVM", "❌ Error:", e)
