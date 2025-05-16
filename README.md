@@ -72,8 +72,8 @@ We need to connect our watch to Android studio. In order to do that we need to:
 #### Option 3: Running on real smartwatch using APK
 There is a signed APK file in the [releases folder](releases/nanogpt-v1.0.apk) with API keys embedded. In order to run it:
 1. Download the APK file to your phone paired to your watch.
-2. Install Wear Installer app from Google Play Store [here](https://play.google.com/store/apps/details?id=org.freepoc.wearinstaller&hl=en)
-3. Open the app on your phone and select our downloaded APK file. Wear Installer will send it to your smartwatch for installation.
+2. Install Wear Installer 2 app from Google Play Store [here](https://play.google.com/store/apps/details?id=org.freepoc.wearinstaller2&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3Dwear+installer+2&pcampaignid=APPU_1_TcMnaOCtDPSrwPAPkM6z4Ao)
+3. Open the app on your phone, watch the video on pairing your smartwatch and follow the steps in the video to send the app to your smartwatch.
 4. Once installed, you can run Nano GPT as usual smartwatch app.
 
 ---
