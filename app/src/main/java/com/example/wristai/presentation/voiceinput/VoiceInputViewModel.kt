@@ -51,10 +51,17 @@ class VoiceInputViewModel @Inject constructor(
                 val aiReply = aiRepo.sendPrompt(userText, selectedModel.modelId)
 //                Log.d("VoiceInputVM", "🟢 AI Reply: ${aiReply.take(200)}…")
                 conversation = conversation + (userText to aiReply)
-            } catch (e: Exception) {
-//                Log.e("VoiceInputVM", "❌ Error:", e)
-                errorMessage = e.localizedMessage
-            } finally {
+                } catch (e: Exception) {
+//                    Log.e("VoiceInputVM", "❌ Error:", e)
+                    errorMessage = when {
+                        e.message?.contains("401") == true || e.message?.contains("Unauthorized") == true ->
+                            "Invalid API keys"
+                        e.message?.contains("403") == true ->
+                            "Access denied. No permission to use this model."
+                        else ->
+                            e.localizedMessage ?: "Unknown error occurred."
+                    }
+                } finally {
                 isLoading = false
             }
         }

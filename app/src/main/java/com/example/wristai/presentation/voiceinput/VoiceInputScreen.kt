@@ -123,7 +123,7 @@ fun VoiceInputScreen(
     }
 
     ScreenScaffold {
-        if (conversation.isEmpty()) {
+        if (conversation.isEmpty() && error==null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
