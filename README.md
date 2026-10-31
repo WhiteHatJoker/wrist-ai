@@ -2,15 +2,19 @@
 
 **Nano GPT** is a Kotlin-based Wear OS application that brings powerful LLMs directly to your wrist. It uses voice input to let users interact with AI assistants like ChatGPT (OpenAI) and Gemini (Google), and shows the response text.
 
+Built in early 2025 as my bachelor's diploma project, at a time when no LLM assistant was available natively on Wear OS smartwatches. Google later brought Gemini to Wear OS watches in 2025; this app delivered the same idea earlier, with a choice of ChatGPT and Gemini models from the wrist.
+
 ---
 
 ## 📱 Features
 
 - Voice input using Wear OS speech recognizer
 - Supports both **ChatGPT** and **Gemini** APIs
-- LLM model switching via dropdown UI
+- LLM model switching via dropdown UI: ChatGPT 4o, ChatGPT 4.1, o4-mini, Gemini 2.5 Pro, Gemini 2.5 Flash, Gemini 2.0 Flash
 - Clean UI built with **Jetpack Compose for Wear OS**
 - MVVM architecture + Hilt dependency injection
+- Retrofit clients for the OpenAI and Gemini REST APIs behind a common `LlmRepository` interface
+- Unit tests for the ViewModel and every repository
 
 ---
 
@@ -34,18 +38,18 @@ git clone https://github.com/WhiteHatJoker/wrist-ai
 
 ### 2. Add API keys
 It is very important to add API keys as the app won't work without them.
-In `local.properties` file, add:
+In `local.properties` file (not committed to git), add:
 ```bash
 OPENAI_API_KEY=your_openai_api_key
 GEMINI_API_KEY=your_gemini_api_key
 ```
-Note that in order to use OpenAI API you need an OpenAI API key & funds on your account. Gemini API keys are free, except for model Gemini 2.5 Pro.
+The keys are injected at build time through `BuildConfig`, so they never live in the source code. Note that in order to use OpenAI API you need an OpenAI API key & funds on your account. Gemini API keys are free, except for model Gemini 2.5 Pro.
 
 ### 3. Build the project
-Press Run button in Android studio. Please note that you can run the app on real smartwatch or on emulator. Below I will introduce three ways to run project.
+Press Run button in Android studio. Please note that you can run the app on real smartwatch or on emulator. Below are two ways to run the project.
 
 ### 4. Run the app
-Following are the three options to run the app:
+Following are the two options to run the app:
 
 ---
 
@@ -69,15 +73,6 @@ We need to connect our watch to Android studio. In order to do that we need to:
 
 ---
 
-#### Option 3: Running on real smartwatch using APK
-There is a signed APK file in the [releases folder](releases/nanogpt-v1.0.apk) with API keys embedded. In order to run it:
-1. Download the APK file to your phone paired to your watch.
-2. Install Wear Installer 2 app from Google Play Store [here](https://play.google.com/store/apps/details?id=org.freepoc.wearinstaller2&hl=en&referrer=utm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_term%3Dwear+installer+2&pcampaignid=APPU_1_TcMnaOCtDPSrwPAPkM6z4Ao)
-3. Open the app on your phone, watch the video on pairing your smartwatch and follow the steps in the video to send the app to your smartwatch.
-4. Once installed, you can run Nano GPT as usual smartwatch app.
-
----
-
 ## 🧪 Testing
 This project includes unit tests for:
 * VoiceInputViewModel
@@ -90,5 +85,5 @@ To run tests, you just need to right click [test folder](app/src/test/) in Andro
 ---
 
 ## 🙋‍♂️ Author
-Developed by Ravshanjon Khudoyberdiev.
+Developed by Ravshan Khudoyberdiev.
 Part of a Bachelor’s Diploma Project (2025) at IT Park University.
